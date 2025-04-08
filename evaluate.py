@@ -19,7 +19,7 @@ class TargetDomainWrapper(gym.Wrapper):
         # 加强重力
         model.opt.gravity[2] = -14.8  # 原为 -9.8 或 -9.81
         # 增加摩擦
-        model.geom_friction[:, 0] *= 1.5  # 原为 1.0
+        model.geom_friction[:, 0] *= 1.0  # 原为 1.0
         # 增加质量
         model.body_mass[:] *= 1.2
 
@@ -35,20 +35,7 @@ def evaluate_model(model_path, env, episodes=10, render=False):
         
         while not (terminated or truncated):
             # 可选开启渲染
-            if render:
-                # 设置摄像头跟踪位置
-                if ep == 0 and step == 0:
-                    # 设置摄像头跟踪位置
-                    
-                    # 先解开wrapper
-                    base_env = env
-                    while hasattr(base_env, 'env'):
-                        base_env = base_env.env
-                    
-                    torso_id = base_env.unwrapped.sim.model.body_name2id("torso")
-                    env.unwrapped.viewer.cam.trackbodyid = torso_id
-                    env.unwrapped.viewer.cam.distance = 5.0
-                    env.unwrapped.viewer.cam.elevation = -15
+            if render:                    
                 env.render()
             # 通过模型预测action
             action, _ = model.predict(obs, deterministic=True)
