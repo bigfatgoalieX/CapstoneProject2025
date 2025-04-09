@@ -12,7 +12,7 @@ class DomainRandomizationWrapper(gym.Wrapper):
         super().__init__(env)
         self.original_body_mass = np.copy(self.unwrapped.model.body_mass)
         self.original_geom_friction = np.copy(self.unwrapped.model.geom_friction)
-        self.original_joint_friction = np.copy(self.unwrapped.model.dof_joint_friction)
+        # self.original_joint_friction = np.copy(self.unwrapped.model.dof_joint_friction)
 
     def reset(self, **kwargs):
         # ===== 质量随机化 =====
@@ -25,11 +25,17 @@ class DomainRandomizationWrapper(gym.Wrapper):
         # self.unwrapped.model.dof_joint_friction[:] = self.original_joint_friction * np.random.uniform(0.5, 1.5, size=self.original_joint_friction.shape)
 
         # ===== 观测噪声（随机噪声扰动观测值） =====
-        # 如果是图像观测，可以在这里加入图像噪声；对于数值型观测，可以加点噪声。
-        noise = np.random.normal(0, 0.1, size=self.observation_space.shape)
-        obs, _ = self.env.reset(**kwargs)
-        obs += noise  # 加入噪声
-        return obs
+        # 调用原始 reset
+        result = self.env.reset(**kwargs)
+        obs, info = result if isinstance(result, tuple) else (result, {})
+
+        # 加入观测噪声
+        noise = np.random.normal(0, 0.1, size=obs.shape)
+        obs = obs + noise
+        
+        # have to return info as well since DummyVecEnv expects it
+        # DummyVecEnv expects a tuple (obs, info) from reset
+        return obs, info 
 
     def step(self, action):
         # ===== 动作噪声（在执行动作时加入噪声） =====
@@ -38,6 +44,9 @@ class DomainRandomizationWrapper(gym.Wrapper):
         return self.env.step(action)
 
 def make_env():
+    # maybe set max_episode_steps here ?
+    # to make sure DR reset once per episode
+    # env = gym.make("HalfCheetah-v5", max_episode_steps=1000)
     env = gym.make("HalfCheetah-v5")
     env = DomainRandomizationWrapper(env)
     env = Monitor(env)

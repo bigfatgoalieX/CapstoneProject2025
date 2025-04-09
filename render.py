@@ -40,5 +40,5 @@ if __name__ == "__main__":
     target_env = TargetDomainWrapper(target_env)
     # maybe use a wrapper here
     print("Rendering model...")
-    model_path = "./runs/td3_baseline_2025-04-09_20-42-40/checkpoints/td3_halfcheetah_baseline_180000_steps.zip"
+    model_path = "./runs/td3_dr_2025-04-09_23-25-11/checkpoints/td3_halfcheetah_dr_180000_steps.zip"
     render_model(model_path,target_env)
