@@ -1,0 +1,3 @@
+*** command to activate tensorboard
+tensorboard --logdir= the path of tensorboard log file
+example: = D:\NJU_undergraduate\Spring2025\DomainAdaptation\runs\td3_baseline_2025-04-09_20-42-40\tensorboard

@@ -1,0 +1,3 @@
+this time training for 200000 steps
+but seems like reward still going up
+maybe should try 500000

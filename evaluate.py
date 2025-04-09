@@ -17,13 +17,13 @@ class TargetDomainWrapper(gym.Wrapper):
     def modify_physics(self):
         model = self.env.unwrapped.model
         # 加强重力
-        model.opt.gravity[2] = -14.8  # 原为 -9.8 或 -9.81
+        model.opt.gravity[2] = -9.81  # 原为 -9.8 或 -9.81
         # 增加摩擦
         model.geom_friction[:, 0] *= 1.0  # 原为 1.0
         # 增加质量
-        model.body_mass[:] *= 1.2
+        model.body_mass[:] *= 1.0
 
-def evaluate_model(model_path, env, episodes=10, render=False):
+def evaluate_model(model_path, env, episodes=10):
     model = TD3.load(model_path)
     rewards = []
 
@@ -35,8 +35,8 @@ def evaluate_model(model_path, env, episodes=10, render=False):
         
         while not (terminated or truncated):
             # 可选开启渲染
-            if render:                    
-                env.render()
+            # if render:                    
+            #     env.render()
             # 通过模型预测action
             action, _ = model.predict(obs, deterministic=True)
             obs, reward, terminated, truncated, info = env.step(action)
@@ -54,23 +54,14 @@ def evaluate_model(model_path, env, episodes=10, render=False):
 
 if __name__ == "__main__":
     # 设置目标域环境
-    target_env = gym.make("HalfCheetah-v5", render_mode="human")
+    target_env = gym.make("HalfCheetah-v5")
     target_env = TargetDomainWrapper(target_env)
 
     # 加载模型并评估
     print("Start evaluating...")
-    model_path = "./models_checkpoints/td3_halfcheetah_baseline_20000_steps.zip"
-    reward = evaluate_model(model_path, target_env, render=True)
-    # print("Evaluating baseline model (no DR)...")
-    # baseline_model_path = "./models/td3_halfcheetah_baseline.zip"
-    # baseline_reward = evaluate_model(baseline_model_path, target_env)
-
-    # print("\nEvaluating DR model (with domain randomization)...")
-    # dr_model_path = "./models/td3_halfcheetah_dr.zip"
-    # dr_reward = evaluate_model(dr_model_path, target_env)
+    model_path = "./runs/td3_baseline_2025-04-09_20-42-40/checkpoints/td3_halfcheetah_baseline_40000_steps.zip"
+    reward = evaluate_model(model_path, target_env)
 
     # 输出对比结果
     print("\nEvaluation Results:")
     print(f"Model Average Reward: {reward}")
-    # print(f"Baseline Model Average Reward: {baseline_reward}")
-    # print(f"DR Model Average Reward: {dr_reward}")
