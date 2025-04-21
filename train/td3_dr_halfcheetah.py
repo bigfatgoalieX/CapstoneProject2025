@@ -73,14 +73,14 @@ if __name__ == "__main__":
 
     # ===== 设置 checkpoint 回调函数 =====
     checkpoint_callback = CheckpointCallback(
-        save_freq=10000,
+        save_freq=50000,
         save_path=checkpoint_dir,
         name_prefix="td3_halfcheetah_dr"
     )
 
     # ===== 开始训练 =====
     print(f"Training domain-randomized model... (run: {run_name})")
-    model.learn(total_timesteps=200000, callback=checkpoint_callback)
+    model.learn(total_timesteps=500000, callback=checkpoint_callback)
 
     # ===== 保存最终模型 =====
     final_model_path = os.path.join(save_dir, "td3_halfcheetah_dr")

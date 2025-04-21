@@ -19,7 +19,7 @@ class TargetDomainWrapper(gym.Wrapper):
         # 加强重力
         model.opt.gravity[2] = -9.81  # 原为 -9.8 或 -9.81
         # 增加摩擦
-        model.geom_friction[:, 0] *= 1.0  # 原为 1.0
+        model.geom_friction[:, 0] *= 2.5  # 原为 1.0
         # 增加质量
         model.body_mass[:] *= 1.0
 
@@ -59,7 +59,8 @@ if __name__ == "__main__":
 
     # 加载模型并评估
     print("Start evaluating...")
-    model_path = "./runs/td3_baseline_2025-04-09_20-42-40/checkpoints/td3_halfcheetah_baseline_40000_steps.zip"
+    # model_path = "./runs/td3_dr_2025-04-10_11-30-35/td3_halfcheetah_dr.zip"
+    model_path = "./runs/td3_baseline_2025-04-10_00-53-48/td3_halfcheetah_baseline.zip"
     reward = evaluate_model(model_path, target_env)
 
     # 输出对比结果

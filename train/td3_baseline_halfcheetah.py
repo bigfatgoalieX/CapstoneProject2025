@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
     # ===== 开始训练 =====
     print(f"Training baseline model... (run: {run_name})")
-    model.learn(total_timesteps=200000, callback=checkpoint_callback)
+    model.learn(total_timesteps=500000, callback=checkpoint_callback)
 
     # ===== 保存最终模型 =====
     final_model_path = os.path.join(save_dir, "td3_halfcheetah_baseline")

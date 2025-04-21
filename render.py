@@ -18,9 +18,9 @@ class TargetDomainWrapper(gym.Wrapper):
         # 加强重力
         model.opt.gravity[2] = -9.81  # 原为 -9.8 或 -9.81
         # 增加摩擦
-        model.geom_friction[:, 0] *= 1.0  # 原为 1.0
+        model.geom_friction[:, 0] *= 3.0  # 原为 1.0
         # 增加质量
-        model.body_mass[:] *= 1.0
+        model.body_mass[:] *= 1.5
         
         
 def render_model(model_path,env):
@@ -40,5 +40,6 @@ if __name__ == "__main__":
     target_env = TargetDomainWrapper(target_env)
     # maybe use a wrapper here
     print("Rendering model...")
-    model_path = "./runs/td3_dr_2025-04-09_23-25-11/checkpoints/td3_halfcheetah_dr_180000_steps.zip"
+    model_path = "./runs/td3_dr_2025-04-10_11-30-35/td3_halfcheetah_dr.zip"
+    # model_path = "./runs/td3_baseline_2025-04-10_00-53-48/td3_halfcheetah_baseline.zip"
     render_model(model_path,target_env)
