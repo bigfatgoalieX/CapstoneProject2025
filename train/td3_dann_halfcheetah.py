@@ -54,6 +54,9 @@ class DANNActor(nn.Module):
         features = self.feature(x)
         action = torch.tanh(self.action_head(features))
         return action, features
+    
+    def set_training_mode(self,mode : bool) -> None:
+        self.train(mode)
 
 # ==== 4. 域判别器 ====
 class DomainClassifier(nn.Module):
@@ -108,12 +111,12 @@ if __name__ == "__main__":
     print("Starting training with DANN...")
     for step in range(1, 100001):
         # === 采样 source ===
-        obs, _ = source_env.reset()
+        obs = source_env.reset()
         obs_tensor = torch.tensor(obs, dtype=torch.float32).to(device)
         action, feat_src = actor(obs_tensor)
         
         # === 采样 target ===
-        obs_tar, _ = target_env.reset()
+        obs_tar = target_env.reset()
         obs_tar_tensor = torch.tensor(obs_tar, dtype=torch.float32).to(device)
         _, feat_tar = actor(obs_tar_tensor)
 

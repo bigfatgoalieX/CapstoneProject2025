@@ -1,0 +1,10 @@
+{
+  "env": "HalfCheetah-v5",
+  "mass_scale": 1.5,
+  "total_steps": 100000,
+  "actor_lr": 0.001,
+  "domain_lr": 0.001,
+  "grl_lambda": 1.0,
+  "obs_dim": 17,
+  "action_dim": 6
+}
